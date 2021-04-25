@@ -2,7 +2,7 @@
  * @Author: Beacon Zhang
  * @Date: 2021-03-21 18:43:44
  * @LastEditors: Beacon Zhang
- * @LastEditTime: 2021-03-30 15:56:03
+ * @LastEditTime: 2021-03-31 12:05:21
  * @Description: GUI Implementation
  */
 use iced::{
@@ -115,7 +115,7 @@ impl Sandbox for Counter {
             Message::Encrypt => {
                 self.update(Message::ResultChanged(String::from("")));
                 let key = self.key_content.parse::<i32>();
-                if key.is_err() {
+                if key.is_err() && self.selected_cipher!=Cipher::Polybius {
                     self.update(Message::ResultChanged(format!(
                         "Error: invalid key:<{:?}>",
                         key.err()
@@ -129,12 +129,10 @@ impl Sandbox for Counter {
                     ),
                     Cipher::Railfence => railfence::encrypt(
                         &self.cleartext_content,
-                        self.key_content.parse::<i32>().unwrap(),
-                        false,
+                        self.key_content.parse::<i32>().unwrap()
                     ),
-                    Cipher::Polybius => caeser::encrypt(
+                    Cipher::Polybius => polybius::encrypt(
                         &self.cleartext_content,
-                        self.key_content.parse::<i32>().unwrap(),
                     ),
                 };
                 let t = match t {
@@ -151,7 +149,7 @@ impl Sandbox for Counter {
             Message::Decrypt => {
                 self.update(Message::ResultChanged(String::from("")));
                 let key = self.key_content.parse::<i32>();
-                if key.is_err() {
+                if key.is_err() && self.selected_cipher!=Cipher::Polybius {
                     self.update(Message::ResultChanged(format!(
                         "Error: invalid key:<{:?}>",
                         key.err()
@@ -166,11 +164,9 @@ impl Sandbox for Counter {
                     Cipher::Railfence => railfence::decrypt(
                         &self.ciphertext_content,
                         self.key_content.parse::<i32>().unwrap(),
-                        false,
                     ),
-                    Cipher::Polybius => caeser::decrypt(
+                    Cipher::Polybius => polybius::decrypt(
                         &self.ciphertext_content,
-                        self.key_content.parse::<i32>().unwrap(),
                     ),
                 };
                 let t = match t {

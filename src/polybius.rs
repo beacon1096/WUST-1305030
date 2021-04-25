@@ -2,7 +2,7 @@
  * @Author: Beacon Zhang
  * @Date: 2021-03-22 19:44:17
  * @LastEditors: Beacon Zhang
- * @LastEditTime: 2021-03-30 16:14:48
+ * @LastEditTime: 2021-03-31 12:44:01
  * @Description: Implementation of Caeser Cipher
  */
 use std::collections::HashMap;
@@ -20,6 +20,7 @@ impl Coordinate {
 }
 
 pub fn encrypt(clear_text: &String) -> Option<String> {
+    let clear_text = clear_text.to_ascii_lowercase();
     let mut map: HashMap<char, Coordinate> = HashMap::new();
     for i in 0..26 {
         let delta: i32 = if i >= ('j' as u8 - 'a' as u8) as i32 {
@@ -38,8 +39,13 @@ pub fn encrypt(clear_text: &String) -> Option<String> {
         .map(|(_i, c)| match map.get(&c) {
             Some(t) => t.to_string(),
             None => {
-                watchdog_bark = 1;
-                "".to_string()
+                if c.is_ascii_whitespace() {
+                    "".to_string()
+                }
+                else {
+                    watchdog_bark = 1;
+                    "".to_string()
+                }
             }
         })
         .collect();

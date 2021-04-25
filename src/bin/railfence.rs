@@ -2,7 +2,7 @@
  * @Author: Beacon Zhang
  * @Date: 2021-03-17 16:37:37
  * @LastEditors: Beacon Zhang
- * @LastEditTime: 2021-03-30 15:49:20
+ * @LastEditTime: 2021-04-01 11:25:38
  * @Description: Binary crate of Railfence Cipher
  */
 use clap::Clap;
@@ -29,7 +29,7 @@ struct Opts {
     content: Option<String>,
     /// Level of verbosity
     #[clap(short, long, parse(from_occurrences))]
-    verbose: i32,
+    _verbose: i32,
 }
 
 fn main() {
@@ -47,8 +47,8 @@ fn main() {
     };
 
     let ans = match opts.mode {
-        'e' => railfence::encrypt(&content.to_string(), opts.key, opts.verbose > 0),
-        'd' => railfence::decrypt(&content.to_string(), opts.key, opts.verbose > 0),
+        'e' => railfence::encrypt(&content.to_string(), opts.key),
+        'd' => railfence::decrypt(&content.to_string(), opts.key),
         _ => Some(
             "Error: wrong mode provided.\nAvailable:  e   - encrypt\n            d   - decrypt"
                 .to_string(),
